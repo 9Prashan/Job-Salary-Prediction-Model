@@ -15,35 +15,18 @@ This repository contains a simple machine-learning pipeline that predicts a job'
 - `streamlit_app.py` — interactive web UI for making predictions.
 - `job_prediction.ipynb` — exploratory notebook (EDA and experiments).
 
-## Requirements
+## Tech stack
 
-Install the project dependencies (recommended inside a virtual environment):
+- Python
+- pandas
+- numpy
+- scikit-learn
+- joblib
+- streamlit
+- matplotlib, seaborn (for EDA)
+- Jupyter / JupyterLab
 
-```bash
-python -m venv .venv
-# Windows PowerShell
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
-
-The important packages are: `pandas`, `numpy`, `scikit-learn`, `joblib`, and `streamlit`.
-
-## Dataset / Input schema
-
-The dataset included (`job_salary_prediction_dataset.csv`) has the following columns (used as model inputs):
-
-- `job_title` (string)
-- `experience_years` (integer)
-- `education_level` (string)
-- `skills_count` (integer)
-- `industry` (string)
-- `company_size` (string)
-- `location` (string)
-- `remote_work` (string) — e.g. `Yes`/`No`/`Hybrid`
-- `certifications` (integer)
-- `salary` (numeric target)
-
-When making predictions the model expects a single-row `pandas.DataFrame` or a CSV with the same feature columns (excluding `salary`). Categories unseen at training time are handled by the `OneHotEncoder(handle_unknown='ignore')` in the pipeline.
+Note: this is a high-level list of the main tools used. See `requirements.txt` if you need a runnable list of packages to install.
 
 ## Train the model
 
