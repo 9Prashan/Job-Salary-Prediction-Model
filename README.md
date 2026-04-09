@@ -28,6 +28,15 @@ This repository contains a simple machine-learning pipeline that predicts a job'
 
 Note: this is a high-level list of the main tools used. See `requirements.txt` if you need a runnable list of packages to install.
 
+## Model overview
+
+- **Purpose:** Predicts an expected annual salary for a job posting or profile using metadata such as job title, years of experience, education level, skills count, industry, company size, location, remote work, and certifications.
+- **Why it's useful:** Provides fast, data-driven salary estimates to support hiring decisions, set candidate expectations, perform market benchmarking, and run compensation analytics.
+- **Who should use it:** Recruiters and hiring managers, compensation analysts, data scientists, product teams, job seekers, and career coaches.
+- **What it predicts:** A numeric salary estimate in the same units as the training data; supports single-row predictions (via the Streamlit UI or programmatically) and batch CSV predictions.
+- **Why use this implementation:** Lightweight, reproducible scikit-learn pipeline that handles unseen categorical values gracefully, is easy to run locally, and comes with a simple UI for non-technical users.
+- **Typical use cases:** Offer-range estimation, salary benchmarking across roles and locations, workforce planning, market research, and demo/educational purposes.
+
 ## Train the model
 
 To train and save the best model run:
