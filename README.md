@@ -1,9 +1,125 @@
 # Job-Salary-Prediction-Model
 
-This repository contains a job salary prediction model built with Python. It includes data preprocessing, model training, and a Streamlit app for inference.
+This repository contains a simple machine-learning pipeline that predicts a job's salary from job metadata (title, experience, education, industry, etc.). The project includes data preprocessing, model training, and a small Streamlit app you can use for interactive predictions.
 
-Files:
-- `job_prediction.ipynb` - exploration and notebook
-- `train_salary_model.py` - training script
-- `streamlit_app.py` - simple web UI
+**Quick overview**
+- Model type: scikit-learn regression pipeline (preprocessing + estimator).
+- Candidate estimators: `LinearRegression`, `RandomForestRegressor`, `GradientBoostingRegressor`.
+- Saved model: `best_salary_model.pkl` (created by `train_salary_model.py`).
+- Dataset: `job_salary_prediction_dataset.csv` (contains features and the `salary` target).
 
+**Files**
+- `job_salary_prediction_dataset.csv` — CSV dataset used for training and demo.
+- `train_salary_model.py` — training script that fits multiple regressors, prints metrics, and saves the best pipeline to `best_salary_model.pkl`.
+- `model_preprocessing.py` — preprocessing example used by the pipeline (scaling + one-hot encoding).
+- `streamlit_app.py` — interactive web UI for making predictions.
+- `job_prediction.ipynb` — exploratory notebook (EDA and experiments).
+
+## Requirements
+
+Install the project dependencies (recommended inside a virtual environment):
+
+```bash
+python -m venv .venv
+# Windows PowerShell
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+The important packages are: `pandas`, `numpy`, `scikit-learn`, `joblib`, and `streamlit`.
+
+## Dataset / Input schema
+
+The dataset included (`job_salary_prediction_dataset.csv`) has the following columns (used as model inputs):
+
+- `job_title` (string)
+- `experience_years` (integer)
+- `education_level` (string)
+- `skills_count` (integer)
+- `industry` (string)
+- `company_size` (string)
+- `location` (string)
+- `remote_work` (string) — e.g. `Yes`/`No`/`Hybrid`
+- `certifications` (integer)
+- `salary` (numeric target)
+
+When making predictions the model expects a single-row `pandas.DataFrame` or a CSV with the same feature columns (excluding `salary`). Categories unseen at training time are handled by the `OneHotEncoder(handle_unknown='ignore')` in the pipeline.
+
+## Train the model
+
+To train and save the best model run:
+
+```bash
+python train_salary_model.py
+```
+
+This script will:
+- Load `job_salary_prediction_dataset.csv`
+- Build a preprocessing pipeline (scaling numeric features, one-hot encoding categoricals)
+- Train several regressors and compare R² / MAE / RMSE
+- Save the best pipeline to `best_salary_model.pkl`
+
+After training you should see `best_salary_model.pkl` in the project root.
+
+## Run the Streamlit app (interactive prediction)
+
+Start the web UI with:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+The app loads the dataset to populate form fields (so the available choices match training values). Fill the form and click **Predict Salary** to see the predicted value.
+
+## Programmatic prediction (example)
+
+You can load the saved pipeline and predict from Python code. Example:
+
+```python
+import joblib
+import pandas as pd
+
+# Load the trained pipeline
+model = joblib.load("best_salary_model.pkl")
+
+# Example single-row input (keys must match training feature names)
+input_df = pd.DataFrame([
+	{
+		"job_title": "Data Analyst",
+		"experience_years": 5,
+		"education_level": "Bachelor",
+		"skills_count": 3,
+		"industry": "Telecom",
+		"company_size": "Small",
+		"location": "Australia",
+		"remote_work": "No",
+		"certifications": 0,
+	}
+])
+
+predicted_salary = model.predict(input_df)[0]
+print(f"Predicted salary: {predicted_salary:,.2f}")
+```
+
+Notes:
+- Ensure column names and types match those used during training. If you add new categorical values that did not appear in the training data, the pipeline will ignore those categories (no error) but the prediction may be less accurate.
+- The predicted value is a numeric salary in the same units as the dataset.
+
+## Troubleshooting & tips
+
+- If `best_salary_model.pkl` is missing, run `python train_salary_model.py` first.
+- If the Streamlit form has only a few choices, open the CSV and confirm the unique values for that column.
+- To improve results: add more training data, tune hyperparameters in `train_salary_model.py`, or try more advanced models.
+
+## Next steps / contributions
+
+- Add a `requirements.txt` pinning versions for reproducibility.
+- Add a `.gitignore` to exclude `best_salary_model.pkl` if you prefer not to commit the model binary.
+- Add a license and contribution guide if you want others to collaborate.
+
+---
+
+If you want, I can also:
+- create a `.gitignore` and commit it,
+- pin `requirements.txt` with exact versions, or
+- add a short example script that accepts a CSV and outputs predictions.
